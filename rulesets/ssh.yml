@@ -1,0 +1,45 @@
+version: 1
+name: sshd
+description: Security-focused Grok rules for suspicious OpenSSH sshd activity
+rules:
+  - id: sshd_auth_failure_invalid_user
+    description: Invalid user login attempts can indicate username enumeration or brute force.
+    type: grok
+    alert_type: user_enumeration
+    match: "%{SYSLOGTIMESTAMP:timestamp} %{SYSLOGHOST:hostname} sshd\\[%{INT:pid}\\]: Failed %{WORD:auth_method} for invalid user %{USERNAME:user} from %{IP:src_ip} port %{INT:src_port} %{WORD:protocol}"
+
+  - id: sshd_auth_failure_known_user
+    description: Repeated failed SSH authentication against a valid user is a likely intrusion attempt.
+    type: grok
+    alert_type: credential_attack
+    match: "%{SYSLOGTIMESTAMP:timestamp} %{SYSLOGHOST:hostname} sshd\\[%{INT:pid}\\]: Failed %{WORD:auth_method} for %{USERNAME:user} from %{IP:src_ip} port %{INT:src_port} %{WORD:protocol}"
+
+  - id: sshd_max_auth_attempts
+    description: Excessive authentication retries are a strong brute-force signal.
+    type: grok
+    alert_type: bruteforce
+    match: "%{SYSLOGTIMESTAMP:timestamp} %{SYSLOGHOST:hostname} sshd\\[%{INT:pid}\\]: error: maximum authentication attempts exceeded for %{USERNAME:user} from %{IP:src_ip} port %{INT:src_port} %{WORD:protocol} %{GREEDYDATA:message}"
+
+  - id: sshd_user_not_allowed
+    description: Access denied due to a restricted or disallowed account is useful for intrusion triage.
+    type: grok
+    alert_type: restricted_access
+    match: "%{SYSLOGTIMESTAMP:timestamp} %{SYSLOGHOST:hostname} sshd\\[%{INT:pid}\\]: User %{USERNAME:user} from %{IP:src_ip} not allowed because not listed in %{GREEDYDATA:reason}"
+
+  - id: sshd_root_login_attempt
+    description: Direct root login attempts are often an attacker preference and should be triaged immediately.
+    type: grok
+    alert_type: root_login_attempt
+    match: "%{SYSLOGTIMESTAMP:timestamp} %{SYSLOGHOST:hostname} sshd\\[%{INT:pid}\\]: ROOT LOGIN REFUSED from %{IP:src_ip} port %{INT:src_port} %{WORD:protocol}"
+
+  - id: sshd_pubkey_auth_failure
+    description: Public-key failures can indicate credential stuffing or key-based brute forcing.
+    type: grok
+    alert_type: credential_attack
+    match: "%{SYSLOGTIMESTAMP:timestamp} %{SYSLOGHOST:hostname} sshd\\[%{INT:pid}\\]: Failed publickey for %{USERNAME:user} from %{IP:src_ip} port %{INT:src_port} %{WORD:protocol}"
+
+  - id: sshd_invalid_protocol
+    description: Invalid SSH protocol traffic is suspicious and often associated with scanning or exploitation attempts.
+    type: grok
+    alert_type: scan_or_probe
+    match: "%{SYSLOGTIMESTAMP:timestamp} %{SYSLOGHOST:hostname} sshd\\[%{INT:pid}\\]: Invalid user %{USERNAME:user} from %{IP:src_ip} port %{INT:src_port} %{WORD:protocol}"

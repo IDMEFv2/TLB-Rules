@@ -1,0 +1,21 @@
+version: 1
+name: su
+description: Security-focused Grok rules for Linux su privilege escalation and account-switch activity
+rules:
+  - id: su_auth_fail
+    description: Failed su attempts may indicate privilege escalation probing or unauthorized account access.
+    type: grok
+    alert_type: privilege_escalation_attempt
+    match: '%{SYSLOGTIMESTAMP:timestamp} %{SYSLOGHOST:hostname} su: FAILED SU \(to %{USER:target_user}\) %{USER:username} on %{NOTSPACE:tty}'
+
+  - id: su_root_shell
+    description: Root shell access is a high-impact event and should be reviewed as privileged access.
+    type: grok
+    alert_type: privileged_access
+    match: '%{SYSLOGTIMESTAMP:timestamp} %{SYSLOGHOST:hostname} su: %{USER:username} to root on %{NOTSPACE:tty}'
+
+  - id: su_user_unknown
+    description: Authentication attempts against unknown users are suspicious and may reflect abuse.
+    type: grok
+    alert_type: privilege_escalation_attempt
+    match: '%{SYSLOGTIMESTAMP:timestamp} %{SYSLOGHOST:hostname} su: FAILED SU \(to %{USER:target_user}\) %{DATA:username} on %{NOTSPACE:tty}'

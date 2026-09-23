@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tlb-rules"
+version = "0.1.0"
+description = "Security log parsing and detection rules for SIEM use cases."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "pygrok==1.0.0",
+  "PyYAML==6.0.3",
+]
+
+[tool.setuptools]
+packages = []

@@ -1,0 +1,7 @@
+{
+  "timestamp": "Sep 12 11:12:15",
+  "hostname": "myhost",
+  "alert_type": "privileged_access",
+  "username": "alice",
+  "tty": "pts/1"
+}

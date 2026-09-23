@@ -1,0 +1,8 @@
+{
+  "timestamp": "Sep 12 11:10:02",
+  "hostname": "myhost",
+  "alert_type": "privilege_escalation_attempt",
+  "target_user": "root",
+  "username": "alice",
+  "tty": "pts/0"
+}

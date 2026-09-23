@@ -1,0 +1,9 @@
+{
+  "timestamp": "Sep 12 10:25:45",
+  "hostname": "myhost",
+  "pid": "5555",
+  "alert_type": "root_login_attempt",
+  "src_ip": "198.51.100.9",
+  "src_port": "22",
+  "protocol": "ssh2"
+}

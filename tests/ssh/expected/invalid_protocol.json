@@ -1,0 +1,10 @@
+{
+  "timestamp": "Sep 12 10:29:22",
+  "hostname": "myhost",
+  "pid": "7777",
+  "alert_type": "scan_or_probe",
+  "user": "admin",
+  "src_ip": "198.51.100.18",
+  "src_port": "22",
+  "protocol": "ssh2"
+}
